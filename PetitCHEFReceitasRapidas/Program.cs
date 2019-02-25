@@ -63,70 +63,232 @@ namespace PetitCHEFReceitasRapidas
 
             foreach (var item in linhas)
             {
-                Receita receita = createReceitas(linhas);
+                Receita receita = createReceitas(item);
 
-                receita.Add(receita);
+                receitas.Add(receita);
             }
 
             return receitas;
         }
 
-        private static Receita createReceitas(HtmlNode linha)
+        private static string getAvaliacao(HtmlNode linha)
         {
-            Receita receita = new Receita
-            {
-                titulo = linha.SelectSingleNode("./div/i[@class='note-fa']").GetAttributeValue("title", string.Empty),
-                enderecoReceita = linha.SelectSingleNode("./h2/a").GetAttributeValue("href", string.Empty),
-                avaliacao = /*fazer regex*/,
-                quantidadeVotos = /*fazer regex*/,
-                quantidadeComentarios ,
-                quantidadeCurtidas /*fazer regex*/,
-                tipoRecita ,
-                dificuldade ,
-                tempoPreparo ,
-                calorias ,
-                ingredientes linha.SelectSingleNode("./div[@class='ingredients']/span/following-sibling::text()").InnerText,
-                cozedura ,
-                public bool semGlutem { get; set; }
-            };
+            var conjunto = "";
 
-    //title="(4.48)/5 ((85) votos)"
+            ////conjuntoSocial = Classificação/Avaliações, Votos e Curtidas;
+            var conjuntoSocial = linha.SelectSingleNode("./div/i").GetAttributeValue("title", string.Empty);
 
-    //var match = Regex.Match("entrada", @"regex");
-
-    string static getAvaliacoes() { }
-
-    var match = Regex.Match("entrada", @"regex");
-
-    var match = Regex.Match("entrada", @"");
+            var match = Regex.Match(conjuntoSocial, @"(\d.\d+)");
 
             if (match.Success)
             {
-                match.Value;
-                    match.Groups[1].Value;
+                conjunto = match.Value;
             }
 
-var avaliacao
+            return conjunto;
+        }
 
-            var preQuantidadeVotos { get; set; }
+        private static string getVotos(HtmlNode linha)
+        {
+            var conjunto = "";
 
-var quantidadeComentarios { get; set; }
+            ////conjuntoSocial = Classificação/Avaliações, Votos e Curtidas;
+            var conjuntoSocial = linha.SelectSingleNode("./div/i").GetAttributeValue("title", string.Empty);
 
-var quantidadeCurtidas { get; set; }
+            var match = Regex.Match(conjuntoSocial, @"\((\d+)");
 
-var tipoRecita { get; set; }
+            if (match.Success)
+            {
+                conjunto = match.Groups[1].Value;
+                match.
+            }
 
-var dificuldade { get; set; }
+            return conjunto;
+        }
 
-var tempoPreparo { get; set; }
+        private static string getComentarios(HtmlNode linha)
+        {
+            var conjunto = "";
 
-var calorias { get; set; }
+            ////conjuntoSocial = Classificação/Avaliações, Votos e Curtidas;
+            var conjuntoSocial = linha.SelectSingleNode("./div/i[2]/following-sibling::text()").InnerText;
 
-var ingredientes { get; set; }
+            var match = Regex.Match(conjuntoSocial, @"\d+");
 
-var cozedura { get; set; }
+            if (match.Success)
+            {
+                conjunto = match.Value;
+            }
 
-var semGlutem { get; set; }
+            return conjunto;
+        }
+
+        private static string getCurtidas(HtmlNode linha)
+        {
+            var conjunto = "";
+
+            ////conjuntoSocial = Classificação/Avaliações, Votos e Curtidas;
+            var conjuntoSocial = linha.SelectSingleNode("./div/i[3]/following-sibling::text()").InnerText;
+
+            var match = Regex.Match(conjuntoSocial, @"\d+");
+
+            if (match.Success)
+            {
+                conjunto = match.Value;
+            }
+
+            return conjunto;
+        }
+
+        private static string getGlutem(HtmlNode linha)
+        {
+            var conjunto = "Não informado";
+
+            var informacao = linha.SelectSingleNode("/div[@class='i-right']/div/img/@title");
+
+            if (informacao != null)
+            {
+                conjunto = informacao.InnerText;
+            }
+
+            return conjunto;
+        }
+
+
+        private static string getTitulo(HtmlNode linha)
+        {
+            var conjunto = "Não informado";
+
+            var informacao = linha.SelectSingleNode("./h2/a").InnerText;
+
+            if (informacao != null)
+            {
+                conjunto = informacao;
+            }
+
+            return conjunto;
+        }
+
+        private static string getEnderecoReceita(HtmlNode linha)
+        {
+            var conjunto = "Não informado";
+
+            var informacao = linha.SelectSingleNode("./h2/a").GetAttributeValue("href", string.Empty);
+
+            if (informacao != null)
+            {
+                conjunto = ("https://pt.petitchef.com" + informacao);
+            }
+
+            return conjunto;
+        }
+        
+        private static string getTipoReceita(HtmlNode linha)
+        {
+            var conjunto = "Não informado";
+
+            var informacao = linha.SelectSingleNode("./div[@class='prop']/span/i[@class='fa fa-utensils fa-fw']/following-sibling::text()").InnerText;
+
+            if (informacao != null)
+            {
+                conjunto = informacao;
+            }
+
+            return conjunto;
+        }
+
+        private static string getDificuldade(HtmlNode linha)
+        {
+            var conjunto = "Não informado";
+
+            var informacao = linha.SelectSingleNode("./div[@class='prop']/span/i[@class='fa fa-signal fa-fw']/following-sibling::text()").InnerText;
+
+            if (informacao != null)
+            {
+                conjunto = informacao;
+            }
+
+            return conjunto;
+        }
+
+        private static string getTempoPreparo(HtmlNode linha)
+        {
+            var conjunto = "Não informado";
+
+            var informacao = linha.SelectSingleNode("./div[@class='prop']/span/i[@class='fa fa-clock fa-fw']/following-sibling::text()").InnerText;
+
+            if (informacao != null)
+            {
+                conjunto = informacao;
+            }
+
+            return conjunto;
+        }
+
+        private static string getCalorias(HtmlNode linha)
+        {
+            var conjunto = "Não informado";
+
+            var informacao = linha.SelectSingleNode("./div[@class='prop']/span/i[@class='fa fa-balance-scale fa-fw']/following-sibling::text()").InnerText;
+
+            if (informacao != null)
+            {
+                conjunto = informacao;
+            }
+
+            return conjunto;
+        }
+
+        private static string getIngredientes(HtmlNode linha)
+        {
+            var conjunto = "Não informado";
+
+            var informacao = linha.SelectSingleNode("./div[@class='ingredients']/span/following-sibling::text()").InnerText;
+
+            if (informacao != null)
+            {
+                conjunto = informacao;
+            }
+
+            return conjunto;
+        }
+
+        private static string getCozedura(HtmlNode linha)
+        {
+            var conjunto = "Não informado";
+
+            var informacao = linha.SelectSingleNode("./div[@class='prop']/span/i[@class='fa fa-fire fa-fw']/following-sibling::text()");
+
+            if (informacao != null)
+            {
+                conjunto = informacao.InnerText;
+            }
+
+            return conjunto;
+        }
+
+        private static Receita createReceitas(HtmlNode linha)
+        {
+
+            Receita receita = new Receita
+            {
+                titulo = getTitulo(linha),
+                enderecoReceita = getEnderecoReceita(linha),
+                avaliacao = getAvaliacao(linha),
+                quantidadeVotos = getVotos(linha),
+                quantidadeComentarios = getComentarios(linha),
+                quantidadeCurtidas = getCurtidas(linha),
+                tipoReceita = getTipoReceita(linha),
+                dificuldade = getDificuldade(linha),
+                tempoPreparo = getTempoPreparo(linha),
+                calorias = getCalorias(linha),
+                ingredientes = getIngredientes(linha),
+                cozedura = getCozedura(linha),
+                semGlutem = getGlutem(linha),
+            };
+
+            return receita;
+        }
     }
 }
-}
+
