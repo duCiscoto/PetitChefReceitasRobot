@@ -21,7 +21,7 @@ namespace PetitCHEFReceitasRapidas
             //// Imprime os falores capturados
             foreach (var item in ColecaoReceitas)
             {
-                Console.WriteLine(ColecaoReceitas.IndexOf(item) + " -  " + item.Titulo + " / " + item.tipoReceita + " / " + item.EnderecoReceita);
+                Console.WriteLine(ColecaoReceitas.IndexOf(item) + " -  " + item.Titulo + " / " + item.TipoReceita + " / " + item.EnderecoReceita);
             }
         }
 
@@ -287,15 +287,15 @@ namespace PetitCHEFReceitasRapidas
                 EnderecoReceita = getEnderecoReceita(linha),
                 Avaliacao = getAvaliacao(linha),
                 QuantidadeVotos = getVotos(linha),
-                quantidadeComentarios = getComentarios(linha),
-                quantidadeCurtidas = getCurtidas(linha),
-                tipoReceita = getTipoReceita(linha),
-                dificuldade = getDificuldade(linha),
-                tempoPreparo = getTempoPreparo(linha),
-                calorias = getCalorias(linha),
-                ingredientes = getIngredientes(linha),
-                cozedura = getCozedura(linha),
-                semGlutem = getGlutem(linha),
+                QuantidadeComentarios = getComentarios(linha),
+                QuantidadeCurtidas = getCurtidas(linha),
+                TipoReceita = getTipoReceita(linha),
+                Dificuldade = getDificuldade(linha),
+                TempoPreparo = getTempoPreparo(linha),
+                Calorias = getCalorias(linha),
+                Ingredientes = getIngredientes(linha),
+                Cozedura = getCozedura(linha),
+                SemGlutem = getGlutem(linha),
             };
 
             return receita;
