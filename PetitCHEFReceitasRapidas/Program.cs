@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 using PetitCHEFReceitasRapidas.Models;
+using System;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace PetitCHEFReceitasRapidas
 {
@@ -19,6 +16,13 @@ namespace PetitCHEFReceitasRapidas
         {
             NavegaPagina("https://pt.petitchef.com/receitas/rapida");
             getReceitas(_doc);
+
+
+            //// Imprime os falores capturados
+            foreach (var item in ColecaoReceitas)
+            {
+                Console.WriteLine(ColecaoReceitas.IndexOf(item) + " -  " + item.Titulo + " / " + item.tipoReceita + " / " + item.EnderecoReceita);
+            }
         }
 
         /// <summary>
@@ -63,9 +67,12 @@ namespace PetitCHEFReceitasRapidas
 
             foreach (var item in linhas)
             {
-                Receita receita = createReceitas(item);
+                if (item.SelectSingleNode("./div[@class='ingredients']/span/text()") != null)
+                {
+                    Receita receita = createReceitas(item);
 
-                receitas.Add(receita);
+                    receitas.Add(receita);
+                }
             }
 
             return receitas;
@@ -73,16 +80,17 @@ namespace PetitCHEFReceitasRapidas
 
         private static string getAvaliacao(HtmlNode linha)
         {
-            var conjunto = "";
+            var conjunto = "Ainda não há avaliações";
 
             ////conjuntoSocial = Classificação/Avaliações, Votos e Curtidas;
-            var conjuntoSocial = linha.SelectSingleNode("./div/i").GetAttributeValue("title", string.Empty);
+            var conjuntoSocial = linha.SelectSingleNode("./div/i");
 
-            var match = Regex.Match(conjuntoSocial, @"(\d.\d+)");
-
-            if (match.Success)
+            if (conjuntoSocial != null)
             {
-                conjunto = match.Value;
+                var match = Regex.Match(conjuntoSocial.GetAttributeValue("title", string.Empty), @"(\d.\d+)");
+
+                if (match.Success)
+                    conjunto = match.Value;
             }
 
             return conjunto;
@@ -90,17 +98,17 @@ namespace PetitCHEFReceitasRapidas
 
         private static string getVotos(HtmlNode linha)
         {
-            var conjunto = "";
+            var conjunto = "Ainda não recebeu votos";
 
             ////conjuntoSocial = Classificação/Avaliações, Votos e Curtidas;
-            var conjuntoSocial = linha.SelectSingleNode("./div/i").GetAttributeValue("title", string.Empty);
+            var conjuntoSocial = linha.SelectSingleNode("./div/i");
 
-            var match = Regex.Match(conjuntoSocial, @"\((\d+)");
-
-            if (match.Success)
+            if (conjuntoSocial != null)
             {
-                conjunto = match.Groups[1].Value;
-                match.
+                var match = Regex.Match(conjuntoSocial.GetAttributeValue("title", string.Empty), @"\((\d+)");
+
+                if (match.Success)
+                    conjunto = match.Groups[1].Value;
             }
 
             return conjunto;
@@ -108,16 +116,18 @@ namespace PetitCHEFReceitasRapidas
 
         private static string getComentarios(HtmlNode linha)
         {
-            var conjunto = "";
+            var conjunto = "Ainda não recebeu comentários";
 
             ////conjuntoSocial = Classificação/Avaliações, Votos e Curtidas;
-            var conjuntoSocial = linha.SelectSingleNode("./div/i[2]/following-sibling::text()").InnerText;
+            var conjuntoSocial = linha.SelectSingleNode("./div/i[2]/following-sibling::text()");
 
-            var match = Regex.Match(conjuntoSocial, @"\d+");
-
-            if (match.Success)
+            if (conjuntoSocial != null)
             {
-                conjunto = match.Value;
+                var match = Regex.Match(conjuntoSocial.InnerText, @"\d+");
+
+                if (match.Success)
+
+                    conjunto = match.Value;
             }
 
             return conjunto;
@@ -125,16 +135,17 @@ namespace PetitCHEFReceitasRapidas
 
         private static string getCurtidas(HtmlNode linha)
         {
-            var conjunto = "";
+            var conjunto = "Ainda não recebeu curtidas";
 
             ////conjuntoSocial = Classificação/Avaliações, Votos e Curtidas;
-            var conjuntoSocial = linha.SelectSingleNode("./div/i[3]/following-sibling::text()").InnerText;
+            var conjuntoSocial = linha.SelectSingleNode("./div/i[3]/following-sibling::text()");
 
-            var match = Regex.Match(conjuntoSocial, @"\d+");
-
-            if (match.Success)
+            if (conjuntoSocial != null)
             {
-                conjunto = match.Value;
+                var match = Regex.Match(conjuntoSocial.InnerText, @"\d+");
+
+                if (conjuntoSocial != null && match.Success)
+                    conjunto = match.Value;
             }
 
             return conjunto;
@@ -182,7 +193,7 @@ namespace PetitCHEFReceitasRapidas
 
             return conjunto;
         }
-        
+
         private static string getTipoReceita(HtmlNode linha)
         {
             var conjunto = "Não informado";
@@ -229,11 +240,11 @@ namespace PetitCHEFReceitasRapidas
         {
             var conjunto = "Não informado";
 
-            var informacao = linha.SelectSingleNode("./div[@class='prop']/span/i[@class='fa fa-balance-scale fa-fw']/following-sibling::text()").InnerText;
+            var informacao = linha.SelectSingleNode("./div[@class='prop']/span/i[@class='fa fa-balance-scale fa-fw']/following-sibling::text()");
 
             if (informacao != null)
             {
-                conjunto = informacao;
+                conjunto = informacao.InnerText;
             }
 
             return conjunto;
@@ -272,10 +283,10 @@ namespace PetitCHEFReceitasRapidas
 
             Receita receita = new Receita
             {
-                titulo = getTitulo(linha),
-                enderecoReceita = getEnderecoReceita(linha),
-                avaliacao = getAvaliacao(linha),
-                quantidadeVotos = getVotos(linha),
+                Titulo = getTitulo(linha),
+                EnderecoReceita = getEnderecoReceita(linha),
+                Avaliacao = getAvaliacao(linha),
+                QuantidadeVotos = getVotos(linha),
                 quantidadeComentarios = getComentarios(linha),
                 quantidadeCurtidas = getCurtidas(linha),
                 tipoReceita = getTipoReceita(linha),

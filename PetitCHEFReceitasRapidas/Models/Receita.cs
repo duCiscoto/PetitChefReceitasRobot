@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PetitCHEFReceitasRapidas.Models
+﻿namespace PetitCHEFReceitasRapidas.Models
 {
     class Receita
     {
-        public string titulo { get; set; }
-        public string enderecoReceita { get; set; }
-        public string avaliacao { get; set; }
-        public string quantidadeVotos { get; set; }
+        public string Titulo { get; set; }
+        public string EnderecoReceita { get; set; }
+        public string Avaliacao { get; set; }
+        public string QuantidadeVotos { get; set; }
         public string quantidadeComentarios { get; set; }
         public string quantidadeCurtidas { get; set; }
         public string tipoReceita { get; set; }
